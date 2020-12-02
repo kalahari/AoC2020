@@ -20,7 +20,7 @@ const main = async () => {
         return { min, max, char, pass };
     });
     // console.log('parsed input', parsed);
-    const valid = parsed.map<number>(p => {
+    const valid1 = parsed.map<number>(p => {
         let idx = p.pass.indexOf(p.char);
         let count = 0;
         while (idx >= 0) {
@@ -30,7 +30,14 @@ const main = async () => {
         if (count >= p.min && count <= p.max) return 1;
         return 0;
     }).reduce((acc, v) => acc + v, 0);
-    console.log('valid count', valid)
+    console.log('valid count part 1', valid1);
+    const valid2 = parsed.map<number>(p => {
+        const minMatch = p.pass[p.min - 1] === p.char ? 1 : 0;
+        const maxMatch = p.pass[p.max - 1] === p.char ? 1 : 0;
+        return minMatch + maxMatch === 1 ? 1 : 0;
+    })
+    .reduce((acc, v) => acc + v, 0);
+    console.log('valid count part 2', valid2);
 };
 
 main().catch(e => console.error(e.stack ?? e.message ?? e))
