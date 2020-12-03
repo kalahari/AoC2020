@@ -20,6 +20,24 @@ const main = async () => {
         coll += 3;
     }
     console.log('tree count part 1', trees);
+    const counts = [
+        { right: 1, down: 1 },
+        { right: 3, down: 1 },
+        { right: 5, down: 1 },
+        { right: 7, down: 1 },
+        { right: 1, down: 2 },
+    ].map(slope => {
+        let coll = slope.right;
+        let trees = 0;
+        for (let i = slope.down; i < rows; i += slope.down) {
+            if (parsed[i][coll % rowLen] === '#') {
+                trees++;
+            }
+            coll += slope.right;
+        }
+        return trees;
+    });
+    console.log('tree product part 2', counts.reduce((acc, count) => acc * count, 1));
 };
 
 main().catch(e => console.error(e.stack ?? e.message ?? e))
