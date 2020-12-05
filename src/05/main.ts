@@ -18,6 +18,15 @@ const main = async () => {
     })
     // console.log('ids', ids)
     console.log('max seat id', ids.map(x => x.id).reduce((acc, id) => acc > id ? acc : id, 0));
+
+    const sorted = ids.map(x => x.id).sort((a, b) => a - b);
+    for (let i = 1; i < sorted.length; i++) {
+        const prev = sorted[i - 1];
+        if (prev + 1 < sorted[i]) {
+            console.log('my seat', prev + 1);
+            break;
+        }
+    }
 };
 
 const binaryPartitionExtract = (address: string, lowerIndicator: string, upperIndicator: string) => {
