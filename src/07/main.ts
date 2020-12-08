@@ -2,6 +2,8 @@ import assert from 'assert';
 import { promises as fs } from 'fs';
 import csv from 'csv-parse/lib/sync';
 
+const SHINY_GOLD = 'shiny gold';
+
 type Bag = { [color: string]: number };
 
 const main = async () => {
@@ -25,8 +27,8 @@ const main = async () => {
             bag[m[2]] = parseInt(m[1]);
         })
     });
-    console.log('bags', bags)
-    const containsGold = Object.keys(bags).filter(b => bags[b]['shiny gold'] != null);
+    // console.log('bags', bags)
+    const containsGold = Object.keys(bags).filter(b => bags[b][SHINY_GOLD] != null);
     const additions = () => Object.keys(bags).filter(b => !containsGold.includes(b) && containsGold.some(cg => bags[b][cg] != null));
     while(true) {
         const add = additions();
@@ -34,6 +36,18 @@ const main = async () => {
         containsGold.push(...add);
     }
     console.log('containsGold', containsGold, containsGold.length)
+    const childCounts: { [color: string]: number } = {};
+    const childCount = (color: string): number => {
+        if (childCounts[color] != null) return childCounts[color];
+        const bag = bags[color];
+        const count = Object
+            .keys(bag)
+            .reduce((acc, c) => acc + bag[c] * (childCount(c) + 1), 0);
+        childCounts[color] = count;
+        console.log('childCount', color, count);
+        return count;
+    };
+    console.log('gold contans', childCount(SHINY_GOLD))
 };
 
 main().catch(e => console.error(e.stack ?? e.message ?? e))
